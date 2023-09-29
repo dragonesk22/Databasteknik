@@ -5,7 +5,7 @@ CREATE TABLE Reviewed
 	stars	INT,
 	t_review	VARCHAR(500),
 
-	PRIMARY KEY (cutomer_ID)	,
+	PRIMARY KEY (customer_ID)	,
 	foreign key(customer_ID)  references Customer(customer_ID),
     foreign key(prod_ID) references Product(prod_ID)
 );
