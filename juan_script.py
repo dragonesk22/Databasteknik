@@ -9,6 +9,7 @@ db = connect(
 cursor = db.cursor()
 
 cursor.execute("SHOW DATABASES")
+cursor.execute("""""")
 
 """
 

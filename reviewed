@@ -1,5 +1,4 @@
-"""
-CREATE TABLE Reviewed
+CREATE TABLE IF NOT EXISTS Reviewed
 (
 	prod_ID	INT not NULL,
 	customer_ID	INT not null,
@@ -10,5 +9,3 @@ CREATE TABLE Reviewed
 	foreign key(customer_ID)  references Customer(customer_ID),
     foreign key(prod_ID) references Product(prod_ID)
 );
-
-"""
