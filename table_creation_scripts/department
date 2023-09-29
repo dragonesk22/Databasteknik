@@ -1,0 +1,11 @@
+CREATE TABLE Department (
+    dep_ID INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    descr VARCHAR(255) NOT NULL,
+    link VARCHAR(255) NOT NULL,
+    PRIMARY KEY (dep_ID)
+);
+
+
+
+

@@ -1,0 +1,12 @@
+CREATE TABLE Placed_Order (
+    payment_ref INT NOT NULL,
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    tracking_number INT,
+    customer_ID INT NOT NULL,
+    PRIMARY KEY (payment_ref),
+    FOREIGN KEY (customer_ID)
+        REFERENCES Customer (customer_ID)
+);
+
+
+
