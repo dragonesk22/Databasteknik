@@ -6,3 +6,8 @@ values
 insert into Placed_Order
 values
 (12, CURRENT_TIME, NULL, 2);
+
+insert into Reviews
+values
+(1005,0,5,"The Dude abides by this product."),
+(1005,2,3,"It tastes funny to me.");
