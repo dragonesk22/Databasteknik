@@ -12,6 +12,7 @@ print("Opened database successfully")
 #--------------------------------------------------------------------------
 #Creation of the tables
 
+str = '''CREATE TABLE IF NOT EXISTS TRAINERS('''
 conn.execute('''CREATE TABLE IF NOT EXISTS Trainers(
            trainer_id                   INT                     PRIMARY KEY,
            trainer_name                 TEXT                    NOT NULL
