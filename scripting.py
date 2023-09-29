@@ -2,14 +2,13 @@ from mysql.connector import connect
 
 db = connect(
     host='fries.it.uu.se',
-    user='ht23_1_group_50',
-    password='pasSWd_50'
+    user='ht23_1_group_13',
+    password='pasSWd_13'
 )
 
 cursor = db.cursor()
 
 cursor.execute("SHOW DATABASES")
-
-
-cursor.execute("""""")
+for x in cursor:
+    print(x)
 db.close()
