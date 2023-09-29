@@ -8,7 +8,11 @@ db = connect(
 
 cursor = db.cursor()
 
-cursor.execute("SHOW DATABASES")
-for x in cursor:
-    print(x)
+
+table_name = "Customer"
+query = f"SELECT * FROM {table_name}"
+cursor.execute(query)
+for row in cursor.fetchall():
+    print(row)
+
 db.close()
