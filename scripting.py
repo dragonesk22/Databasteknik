@@ -13,4 +13,9 @@ cursor.execute("SHOW DATABASES")
 for x in cursor:
     print(x)
 
+cursor.execute("SHOW TABLES")
+
+for x in cursor:
+    print(x)
+
 db.close()
