@@ -43,8 +43,12 @@ WHERE
     P1.title = 'banana'
         AND P2.title != 'banana';
         
-#Query to list all products within a certain department (in this case, Computers) along with their title, desc, price, avg rating when g
-select * from Department;
-
-
-
+#Query to list all products within a certain department (in this case, Computers) along with their title, desc, price, avg rating
+SELECT
+	P1.title, P1.prod_desc, P1.prod_price, P1.avg_rating
+FROM
+	Product as P1
+    join
+    Department as D1 on P1.dep_ID = D1.dep_ID 
+WHERE
+	D1.link='Computers';
