@@ -45,10 +45,17 @@ WHERE
         
 #Query to list all products within a certain department (in this case, Computers) along with their title, desc, price, avg rating
 SELECT
-	P1.title, P1.prod_desc, P1.prod_price, P1.avg_rating
+	P1.title, P1.prod_desc, P1.prod_price - (P1.prod_price * P1.percent_discount), P1.avg_rating
 FROM
 	Product as P1
     join
     Department as D1 on P1.dep_ID = D1.dep_ID 
 WHERE
 	D1.link='Computers';
+
+#Query to list all sale products by discount percentage largest to smallest
+select prod_ID, title, percent_discount, (prod_price - (prod_price * percent_discount))
+from Product
+order by percent_discount desc;
+
+
