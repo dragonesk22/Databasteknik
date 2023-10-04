@@ -4,13 +4,13 @@ from time import ctime
 
 
 def Connect():
-    DB = connect(
+    db = connect(
         host='fries.it.uu.se',
         user='ht23_1_group_13',
         password='pasSWd_13',
         database='ht23_1_project_group_13'
     )
-    return DB.cursor(), DB
+    return db.cursor(), db
 
 
 def Get_Tables(cursor):
@@ -53,8 +53,8 @@ def get_table_data(input, cursor):
 
     data = DF(_relation).T
 
-    data.columns = get_attributes(input, cursor)
 
+    data.columns = get_attributes(input, cursor)
     return data
 
 
@@ -65,7 +65,7 @@ def browse_data(bool, data):
 
     while b is not False:
 
-        cmd = input("\n" * 2 + "What data do you want to see?. Enter 'Show' for possibilities. \n")
+        cmd = input("\n" * 2 + "What data do you want to see?. Enter 'Show' for possibilities. ")
 
         if cmd != 'Show' and cmd != 'Exit':
             print(data[cmd])
@@ -89,6 +89,7 @@ def browse_data(bool, data):
 
 
 def user_session(cursor):
+
     tables = Get_Tables(cursor)
 
     time = ctime()
@@ -100,13 +101,12 @@ def user_session(cursor):
 
     while not valid:
 
-        str = ("Enter 'Show' to see available tables. Enter 'Exit' to quit program. \n"
+        str = ("Enter 'Show to see available tables. Enter 'Exit' to quit program. \n"
                "Which table would you like to search? ")
 
         inp_ = input(str)
 
         if inp_ in tables:
-
             valid = True
 
         elif inp_ == 'Show':
@@ -139,17 +139,11 @@ Instructions to execute MAIN_SCRIPT.py remotely:
 4. In terminal enter ssh ussr1234@fries.it.uu.se
 6. Enter your password A.
 7. Execute python MAIN_SCRIPT.py
-
-
-Problems Order_Progress Empty.
-
-
 """
 
-# Cursor and database object.
+cursor, db = Connect()
 
-c, db = Connect()
-
-user_session(c)
+user_session(cursor)
 
 db.close()
+
