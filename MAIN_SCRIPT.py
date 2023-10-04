@@ -81,6 +81,7 @@ def browse_data(bool, data):
 
             b = False
 
+
         else:
 
             print("Cannot currently browse other tables than 'Department', try another table.")
