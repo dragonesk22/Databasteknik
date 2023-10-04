@@ -1,5 +1,6 @@
 from mysql.connector import connect
 from pandas import DataFrame as DF
+from time import ctime
 
 db = connect(
     host='fries.it.uu.se',
@@ -14,23 +15,51 @@ cursor = db.cursor()
 # for x in cursor:
 #    print(x)
 
+tables = []
+cursor.execute("SHOW TABLES")
 
-# Query 1: Select every tuple from the Department table.
-table_name = "Department"
-query = f"SELECT * FROM {table_name}"
+for table in cursor:
+    tables.append(table)
+
+tables = [item[0] for item in tables]
 
 
-cursor.execute(query)
+def get_table(input):
+    """
+    :param input: Should be a string with an avilable table name.
+    :return: data: Returns data corresponding to the input table
+    """
 
-# Saves the tuples of the relation Department with attributes dpt_id, title...
-dpt_relation = {}
+    # Query 1: Select every tuple from the Department table.
 
-for i, tuple in enumerate(cursor.fetchall()):
-    dpt_relation[f't{i}'] = tuple
+    table_name = input # Input should be in the available tables for inspection
 
-data = DF(dpt_relation).T
+    query = f"SELECT * FROM {table_name}"
 
-data.columns = ['dept_ID', 'title', 'description', 'link']
+
+    cursor.execute(query)
+
+    # Saves the tuples of the relation Department with attributes dpt_id, title...
+    _relation = {}
+
+    for i, tuple in enumerate(cursor.fetchall()):
+        _relation[f't{i}'] = tuple
+
+    data = DF(_relation).T
+
+    available = ['Department']
+
+    if input == "Department":
+        data.columns = ['dept_ID', 'title', 'description', 'link']
+
+    else:
+
+        print(f"Cannot currently browse other tables than {available}. Try again.")
+
+
+    return data
+
+
 
 """
 Assignment 7. Create a Python program which connects to the database, asks the user for a
@@ -40,47 +69,78 @@ list all its child department  (outputting the ID and the title).
 """
 
 
+def _browse_data(bool, data):
+    b = bool
+
+    possible_cmds = ['dept_ID', 'title', 'description', 'link', 'Show', 'Exit']
+
+    while b is not False:
+        cmd = input("\n"*2 + "What data do you want to see? Enter 'Show' for possibilities: ")
+
+        if cmd != 'Show' and cmd != 'Exit':
+            print(data[cmd])
+
+        elif cmd == 'Show':
+            print(f'The possible commands for this session are: {possible_cmds}')
+
+        elif cmd not in possible_cmds:
+
+            print("Command not avaliable try again.")
+
+        elif cmd == 'Exit':
+
+            b = False
+
+        else:
+
+            print("Cannot currently browse other tables than 'Department', try annother table.")
+
+    print(f"Session terminated by user at {ctime()}.")
+
 def user_session():
+
+    time = ctime()
+    print('\n'*2)
+    print(f"User started session in database at {time}", end='\n'*2)
+    print(f"Available tables for inspection are: {tables}", end='\n'*2)
+
     valid = False
 
     while not valid:
-        dept_ID = int(input("Enter Department ID: "))
 
-        assert isinstance(dept_ID, int), 'Wrong input-type try again...'
+        inp = input("What table would like to search? Enter 'Show' to see available tables. Enter 'Exit' to quit program: ")
 
-        valid = True
+        if inp in tables:
 
-    def _browse_data(bool=False):
-
-        b = bool
-
-        possible_cmds = ['dept_ID', 'title', 'description', 'link', 'Show', 'Exit']
-
-        while b is not False:
-            cmd = input("What data do you want to see? Enter 'Show' for possibilities: ")
+            valid = True
 
 
-            if cmd != 'Show' and cmd != 'Exit':
-                print(data[cmd])
+        elif inp == 'Show':
 
-            elif cmd == 'Show':
-                print(f'The possible commands for this session are: {possible_cmds}')
+            print(f"Available tables for inspection are: {tables}")
 
-            elif cmd not in possible_cmds:
+        elif inp == 'Exit':
 
-                print("Command not avaliable try again.")
+            break
+            print(f"Session terminated by user at {ctime()}")
 
-            elif cmd == 'Exit':
+        else:
 
-                b = False
+            print("Table not recognized try again...")
 
-            else:
+    data = get_table(inp)
 
-                raise NotImplementedError("Command is not implemented. ")
+    _browse_data(True, data)
 
-        print("Session terminated by user.")
 
-    _browse_data(True)
+
+
+
+
+
+
+
+
 
 
 
