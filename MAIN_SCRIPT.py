@@ -121,8 +121,9 @@ def user_session():
 
         elif inp == 'Exit':
 
-            break
             print(f"Session terminated by user at {ctime()}")
+            break
+
 
         else:
 
