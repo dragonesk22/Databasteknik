@@ -15,10 +15,10 @@ cursor = db.cursor()
 #    print(x)
 
 
-# Grab welcome text:
-
+# Query 1: Select every tuple from the Department table.
 table_name = "Department"
 query = f"SELECT * FROM {table_name}"
+
 
 cursor.execute(query)
 
@@ -29,6 +29,7 @@ for i, tuple in enumerate(cursor.fetchall()):
     dpt_relation[f't{i}'] = tuple
 
 data = DF(dpt_relation).T
+
 data.columns = ['dept_ID', 'title', 'description', 'link']
 
 """
@@ -50,16 +51,60 @@ def user_session():
         valid = True
 
     def _browse_data(bool=False):
+        b = bool
 
-        while bool is not False:
-            print(data[input('What data do you want to see? ')])
+        possible_cmds = ['dept_ID', 'title', 'description', 'link', 'Show', 'Exit']
 
+        while b is not False:
+            cmd = input("What data do you want to see? Enter 'Show' for possibilities: ")
+
+            assert cmd in possible_cmds
+
+            if cmd != 'Show' and cmd != 'Exit':
+                print(data[cmd])
+
+            elif cmd == 'Show':
+                print(f'The possible commands for this session are: {possible_cmds}')
+
+            elif cmd == 'Exit':
+
+                b = False
+
+            else:
+
+                raise NotImplementedError("Command is not implemented. ")
+
+        print("Session terminated by user.")
     _browse_data(True)
+
 
 
 user_session()
 
+
+db.close()
+
+
+
+
 """
+
+Instructions to execute MAIN_SCRIPT.py remotely: 
+
+1. Start terminal 
+2. Enter scp MAIN_SCRIPT.py ussr1234@fries.it.uu.se:~/
+3. Enter your studium password A.
+4. In terminal enter ssh ussr1234@fries.it.uu.se
+5. Execute python MAIN_SCRIPT.py
+"""
+
+
+
+
+
+
+"""
+
 
 for keys, vals in dpts_.items():
     print(f'Keys : {keys} Vals: {vals}')
@@ -74,5 +119,3 @@ Keys : t6 Vals: (1301, 'Buy tasty bread', 'altonline.com/Home/Food/Bread', 'Brea
 Keys : t7 Vals: (1302, 'Buy fresh fruit', 'altonline.com/Home/Food/Fruit', 'Fruit')
 
 """
-
-db.close()
