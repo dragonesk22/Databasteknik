@@ -14,6 +14,10 @@ def Connect():
 
 
 def Get_Tables(cursor):
+    """
+    :param cursor:
+    :return: tables currently defined in the database.
+    """
     tables = []
     cursor.execute("SHOW TABLES")
 
@@ -26,6 +30,11 @@ def Get_Tables(cursor):
 
 
 def get_attributes(table_name, cursor):
+    """
+    :param table_name: Table name is given by the user in a session.
+    :param cursor: When the user is connected the session needs a cursor as an input parameter.
+    :return: Returns a list of attributes in the relation table specified by table_name.
+    """
 
     query = f"DESCRIBE {table_name}"
     cursor.execute(query)
@@ -59,6 +68,11 @@ def get_table_data(input, cursor):
 
 
 def browse_data(bool, data):
+    """
+    :param bool: When the user session has started, we want to specify that it is True, that the user wants to browse.
+    :param data: data is given by the users specified table to be browsed.
+    :return: Does not return any values.
+    """
     b = bool
 
     possible_cmds = data.columns.tolist() + ['Show', 'Exit']
@@ -90,6 +104,10 @@ def browse_data(bool, data):
 
 
 def user_session(cursor):
+    """
+    :param cursor:
+
+    """
     tables = Get_Tables(cursor)
 
     time = ctime()
