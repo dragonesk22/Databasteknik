@@ -141,9 +141,11 @@ Instructions to execute MAIN_SCRIPT.py remotely:
 7. Execute python MAIN_SCRIPT.py
 """
 
-cursor, db = Connect()
+# Cursor and database object.
 
-user_session(cursor)
+c, db = Connect()
+
+user_session(c)
 
 db.close()
 
