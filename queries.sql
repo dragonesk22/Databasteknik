@@ -28,7 +28,6 @@ WHERE
             Featured);
             
 #Query to get all products that are keyword-related to a chosen product - in this case the "Banana"
-
 SELECT DISTINCT
     P2.title
 FROM
@@ -43,9 +42,11 @@ WHERE
     P1.title = 'banana'
         AND P2.title != 'banana';
         
+
+        
 #Query to list all products within a certain department (in this case, Computers) along with their title, desc, price, avg rating
 SELECT
-	P1.title, P1.prod_desc, P1.prod_price - (P1.prod_price * P1.percent_discount), P1.avg_rating
+	P1.title, P1.prod_desc, P1.prod_price - (P1.prod_price * P1.percent_discount) + (prod_price * VAT), P1.avg_rating
 FROM
 	Product as P1
     join
@@ -54,8 +55,6 @@ WHERE
 	D1.link='Computers';
 
 #Query to list all sale products by discount percentage largest to smallest
-select prod_ID, title, percent_discount, (prod_price - (prod_price * percent_discount))
+select prod_ID, title, percent_discount, (prod_price - (prod_price * percent_discount) + (prod_price * VAT))
 from Product
 order by percent_discount desc;
-
-
