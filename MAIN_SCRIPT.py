@@ -96,7 +96,7 @@ Instructions to execute MAIN_SCRIPT.py remotely:
 3. Enter your studium password A.
 4. In terminal enter ssh ussr1234@fries.it.uu.se
 6. Enter your password A.
-5. Execute python MAIN_SCRIPT.py
+7. Execute python MAIN_SCRIPT.py
 """
 
 
