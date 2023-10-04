@@ -51,6 +51,7 @@ def user_session():
         valid = True
 
     def _browse_data(bool=False):
+
         b = bool
 
         possible_cmds = ['dept_ID', 'title', 'description', 'link', 'Show', 'Exit']
@@ -58,13 +59,16 @@ def user_session():
         while b is not False:
             cmd = input("What data do you want to see? Enter 'Show' for possibilities: ")
 
-            assert cmd in possible_cmds
 
             if cmd != 'Show' and cmd != 'Exit':
                 print(data[cmd])
 
             elif cmd == 'Show':
                 print(f'The possible commands for this session are: {possible_cmds}')
+
+            elif cmd not in possible_cmds:
+
+                print("Command not avaliable try again.")
 
             elif cmd == 'Exit':
 
@@ -75,6 +79,7 @@ def user_session():
                 raise NotImplementedError("Command is not implemented. ")
 
         print("Session terminated by user.")
+
     _browse_data(True)
 
 
