@@ -48,6 +48,7 @@ def get_table_data(input, cursor):
     """
     :param input: Should be a string with an available table name.
     :return: Returns data corresponding to the input table
+
     """
     table_name = input
 
@@ -85,25 +86,24 @@ def browse_data(bool, data):
             print(data[cmd])
 
         elif cmd == 'Show':
-            print(f'The possible commands for this session are: {possible_cmds}')
+            print(f'The possible commands for this session are: \n{possible_cmds}')
 
         elif cmd not in possible_cmds:
 
-            print("Command not availiable try again.")
+            print("Command not available try again.")
 
         elif cmd == 'Exit':
 
             b = False
 
-
         else:
-
+            # To be fixed.
             print("Cannot currently browse other tables than 'Department', try another table.")
 
     print(f"Session terminated by user at {ctime()}.")
 
 
-def user_session(cursor):
+def admin_session(cursor):
     """
     :param cursor:
 
@@ -113,7 +113,7 @@ def user_session(cursor):
     time = ctime()
     print('\n' * 2)
     print(f"User started session in database at {time}", end='\n' * 2)
-    print(f"Available tables for inspection are: {tables}", end='\n' * 2)
+    print(f"Available tables for inspection are: \n{tables}", end='\n' * 2)
 
     valid = False
 
@@ -146,6 +146,110 @@ def user_session(cursor):
 
     browse_data(True, data)
 
+def change_capitalism(prod_ID, prod_data, cursor):
+
+    ID = prod_ID
+    print(f"ID entered by user is: {ID}")
+
+    for i, ids in enumerate(prod_data['prod_ID']):
+
+        if ID == ids:
+            print(f"The current discount for the product ID {ID} is {prod_data['percent_discount'][i]}")
+
+    question = float(input("Set the percent discount? If so enter decimal in the range (0, 1): "))
+
+    print(f"The discount set by the user is: {question}")
+
+    if 0 <= question <= 1:
+
+        print(f"Inside if")
+        query = f"UPDATE Product SET percent_discount = {question} WHERE prod_ID = {ID}"
+
+        cursor.execute(query)
+
+    data_update = get_table_data('Product', cursor)
+
+    print(data_update['percent_discount'])
+def capitalism(dep_ID, prod_data):
+
+    #assert dep_ID in prod_data['dep_ID'], 'Department is not leaf'
+
+    """
+
+    :param prod_data:
+    :return: ID, title, price, price + discount, discounted price + VAT
+    """
+
+    discounts = prod_data['percent_discount']
+    real_price = prod_data['prod_price']
+
+
+
+    for i, leaf in enumerate(prod_data['dep_ID']):
+
+        if leaf == dep_ID:
+
+            print(f"Product ID: {prod_data['prod_ID'][i]}")
+            print(f"Product title: {prod_data['title'][i]} ")
+            print(f"Product price: {(real_price[i] * (1 - discounts[i]))}")
+
+
+
+
+def user_session(cursor):
+    time = ctime()
+    print('\n' * 2)
+    print(f"User started session in database at {time}", end='\n' * 2)
+
+    tables = Get_Tables(cursor)
+
+    inp_ = int(input("Enter a Department ID: "))
+
+    data_hierarchy = get_table_data('Parent_Relation', cursor)
+    data_deparment = get_table_data('Department', cursor)
+    data_product = get_table_data('Product', cursor)
+
+    parents = data_hierarchy['parent_ID']
+    children = data_hierarchy['child_ID']
+
+    if inp_ in parents:
+        for i, parent in enumerate(parents):
+
+            if parent == inp_:
+                print(f"Deparment ID {parent}, has child {children[i]}")
+
+                print(f"The title of {children[i]} is {data_deparment['title'][i+1]}", end='\n'*2)
+
+    else:
+        print("REACHED")
+        print(inp_)
+
+        capitalism(inp_, data_product)
+
+
+
+
+    #print(data_deparment)
+
+
+
+    """
+    parent_of_inp = [parent for parent in parents if parent == inp_]
+    child_of_inp = [child for child in children if child == inp_]
+
+    print(f"The input department is {inp_} and has whatever: ")
+    print(parent_of_inp, end='\n'*3)
+    print(child_of_inp, end='\n'*3)
+    """
+
+
+
+
+
+
+
+    #print(data_deparment)
+
 
 """
 main code
@@ -169,6 +273,15 @@ Problems Order_Progress Empty.
 
 c, db = Connect()
 
-user_session(c)
+#admin_session(c)
+
+#user_session(c)
+
+prod_ID_to_change = int(input("Which product would you like to change? Enter ID: "))
+
+prod_DATA = get_table_data('Product', c)
+
+change_capitalism(prod_ID_to_change, prod_DATA, c)
+db.commit()
 
 db.close()
