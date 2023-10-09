@@ -146,8 +146,8 @@ def admin_session(cursor):
 
     browse_data(True, data)
 
-def change_capitalism(prod_ID, prod_data, cursor):
 
+def change_capitalism(prod_ID, prod_data, cursor):
     ID = prod_ID
     print(f"ID entered by user is: {ID}")
 
@@ -162,17 +162,17 @@ def change_capitalism(prod_ID, prod_data, cursor):
 
     if 0 <= question <= 1:
 
-        print(f"Inside if")
         query = f"UPDATE Product SET percent_discount = {question} WHERE prod_ID = {ID}"
 
         cursor.execute(query)
 
     data_update = get_table_data('Product', cursor)
 
-    print(data_update['percent_discount'])
-def capitalism(dep_ID, prod_data):
+    updated_data = data_update[['title','percent_discount']]
+    print(updated_data)
 
-    #assert dep_ID in prod_data['dep_ID'], 'Department is not leaf'
+def capitalism(dep_ID, prod_data):
+    # assert dep_ID in prod_data['dep_ID'], 'Department is not leaf'
 
     """
 
@@ -183,17 +183,12 @@ def capitalism(dep_ID, prod_data):
     discounts = prod_data['percent_discount']
     real_price = prod_data['prod_price']
 
-
-
     for i, leaf in enumerate(prod_data['dep_ID']):
 
         if leaf == dep_ID:
-
             print(f"Product ID: {prod_data['prod_ID'][i]}")
             print(f"Product title: {prod_data['title'][i]} ")
             print(f"Product price: {(real_price[i] * (1 - discounts[i]))}")
-
-
 
 
 def user_session(cursor):
@@ -209,29 +204,25 @@ def user_session(cursor):
     data_deparment = get_table_data('Department', cursor)
     data_product = get_table_data('Product', cursor)
 
-    parents = data_hierarchy['parent_ID']
-    children = data_hierarchy['child_ID']
+    parents = data_hierarchy['parent_ID'].tolist()
+    children = data_hierarchy['child_ID'].tolist()
 
     if inp_ in parents:
+
+        print(f"Department {inp_} is a parent department. Here are its children: \n")
+
         for i, parent in enumerate(parents):
 
             if parent == inp_:
                 print(f"Deparment ID {parent}, has child {children[i]}")
 
-                print(f"The title of {children[i]} is {data_deparment['title'][i+1]}", end='\n'*2)
+                print(f"The title of {children[i]} is {data_deparment['title'][i + 1]}", end='\n' * 2)
 
     else:
-        print("REACHED")
-        print(inp_)
 
         capitalism(inp_, data_product)
 
-
-
-
-    #print(data_deparment)
-
-
+    # print(data_deparment)
 
     """
     parent_of_inp = [parent for parent in parents if parent == inp_]
@@ -242,13 +233,7 @@ def user_session(cursor):
     print(child_of_inp, end='\n'*3)
     """
 
-
-
-
-
-
-
-    #print(data_deparment)
+    # print(data_deparment)
 
 
 """
@@ -269,19 +254,67 @@ Problems Order_Progress Empty.
 
 """
 
+
 # Cursor and database object.
 
-c, db = Connect()
 
-#admin_session(c)
+# admin_session(c)
 
-#user_session(c)
+# User_session
+def main():
+    c, db = Connect()
 
-prod_ID_to_change = int(input("Which product would you like to change? Enter ID: "))
+    """
+    During the admin_session() we suggest the following input:
+    
+    1. Parent_Relation          to see parents and their children.
+    2. parent_ID                to see available parents. 
+    4. child_ID                 to see children of parents in tuple order
+    5. Exit
+    
+    Parents:        Children: 
+    t0    1000      1200
+    t1    1200      1201
+    t2    1200      1202
+    t3    1200      1203
+    t4    1000      1300
+    t5    1300      1301
+    t6    1300      1302
+    t7    1300      1303
+    
+    6. Choose a parent to see their children and their descriptions. 
+    7. or choose child to see their products. 
+    8. If parent ID entered observe its children. (Example 1000)
+    9. Enter 'Department' after input of parent ID 1000
+    10. Enter '1200' (also a parent)
+    11. Enter 'Department'
+    12. Enter '1202' (child department)
+    13. Enter '1004' (Thinkpad)
+    14. Enter new discount.
+    """
+    admin_session(c)
 
-prod_DATA = get_table_data('Product', c)
+    user_session(c)
 
-change_capitalism(prod_ID_to_change, prod_DATA, c)
-db.commit()
+    exit = False
+    while exit is not True:
+        prompt = input("Which product would you like to be discounted? If you want to go back to department enter 'Department'.\n"
+                       "Otherwise Enter ID for the product you want to discount: ")
+        if prompt == 'Department':
+            user_session(c)
+        elif int(prompt) % 1 != 0:
+            print("ID must be integer.")
 
-db.close()
+        else:
+            exit = True
+
+    prod_ID_to_change = int(prompt)
+    prod_DATA = get_table_data('Product', c)
+
+    change_capitalism(prod_ID_to_change, prod_DATA, c)
+    db.commit()
+
+    db.close()
+
+
+main()
