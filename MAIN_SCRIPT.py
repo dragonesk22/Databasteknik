@@ -142,6 +142,7 @@ def admin_session(cursor):
 
             print("Table not recognized try again...")
 
+
     data = get_table_data(inp_, cursor)
 
     browse_data(True, data)
@@ -267,7 +268,7 @@ def main():
     """
     During the admin_session() we suggest the following input:
     
-    1. Parent_Relation          to see parents and their children.
+    1. Parent_Relation          to see parents and their children. Dont exit on first step.
     2. parent_ID                to see available parents. 
     4. child_ID                 to see children of parents in tuple order
     5. Exit
